@@ -1,6 +1,6 @@
 //
-//  Barcode128.swift
-//  
+//  Barcodes/Barcode128.swift
+//  BarcodeKit
 //
 //  Created by Charlie on 31/1/21.
 //
