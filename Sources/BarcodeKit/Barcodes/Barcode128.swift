@@ -159,25 +159,16 @@ public class BKGenerator_128 {
 	
 	}
 	
-	public func image(size: Int) -> CGImage? {
+	public func image() -> CGImage? {
 		
-		// 	LinesCount -> Charachter count + start code & check sum + stop code
-//		let points = self.segments.reduce(0, { $0 + $1.pattern.count })
-
-		let row = Array(self.segments.reduce("", { $0 + $1.pattern })).map({ BKPixel_128(value: $0) })
-		var pixels = Array<Array<BKPixel_128>>(repeating: row, count: row.count)
+		let pattern = Array(self.segments.reduce("", { $0 + $1.pattern }))
+		let row = pattern.map({ BKPixel_128(value: $0) })
+		var pixels = Array<Array<BKPixel_128>>(repeating: row, count: row.count).flatMap({ $0 })
 	
 		guard let provider = CGDataProvider(data: NSData(bytes: &pixels, length: pixels.count * MemoryLayout<BKPixel_128>.size)) else { return nil }
 
-		let raw = CGImage(width: row.count, height: row.count, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: row.count * MemoryLayout<BKPixel_128>.size, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue), provider: provider, decode: nil, shouldInterpolate: true, intent: .defaultIntent)!
-		
-		let context = CGContext(data: nil, width: size, height: size, bitsPerComponent: raw.bitsPerComponent, bytesPerRow: raw.bytesPerRow, space: raw.colorSpace!, bitmapInfo: raw.alphaInfo.rawValue)!
-        
-        context.interpolationQuality = .high
-        context.draw(raw, in: CGRect(x: 0, y: 0, width: size, height: size))
-        
-        return context.makeImage()
-		
+		return CGImage(width: row.count, height: row.count, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: Int(Double(pixels.count).squareRoot()) * MemoryLayout<BKPixel_128>.size, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue), provider: provider, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+				
 	}
 	
 }
