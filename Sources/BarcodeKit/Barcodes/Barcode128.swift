@@ -159,11 +159,13 @@ public class BKGenerator_128 {
 	
 	}
 	
-	public func image() -> CGImage? {
+	public func image(size: Int) -> CGImage? {
 		
 		let pattern = Array(self.segments.reduce("", { $0 + $1.pattern }))
-		let row = pattern.map({ BKPixel_128(value: $0) })
-		var pixels = Array<Array<BKPixel_128>>(repeating: row, count: row.count).flatMap({ $0 })
+		let width = Int(ceil(Float(size) / Float(pattern.count)))
+		
+		let row = pattern.flatMap({ [BKPixel_128](repeating: BKPixel_128(value: $0), count: width) })
+		var pixels = [[BKPixel_128]](repeating: row, count: row.count).flatMap({ $0 })
 	
 		guard let provider = CGDataProvider(data: NSData(bytes: &pixels, length: pixels.count * MemoryLayout<BKPixel_128>.size)) else { return nil }
 
