@@ -130,7 +130,7 @@ public class BKGenerator_128 {
 		
 		do {
 		
-			self.segments.append(try self.lookup(charachter: BKSpecial_128.StartCode_A.rawValue))
+			self.segments.append(try self.lookup(charachter: BKSpecial_128.StartCode_B.rawValue))
 		
 			for charachter in data {
 				self.segments.append(try self.lookup(charachter: String(charachter)))
